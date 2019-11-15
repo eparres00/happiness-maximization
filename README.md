@@ -10,6 +10,8 @@ Here are the contents we require in each (all cells are 0 indexed):
      
 `weights.csv`: Weights of each possible connection. Rows represent the choices of the Bigs, Columns represent those of the Littles. For example, the value of the cell at (2, 1) represents the weight for a Big ranking a Little as 3rd and a Little ranking that Big as 2nd.     
 
+here is an example:     ![weights picture](/misc/weights.png)
+
 `big-rankings.csv`: Preferences of bigs. Rows represent
 
 `little-rankings.csv`:
