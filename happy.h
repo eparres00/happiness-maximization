@@ -7,19 +7,40 @@ class Happy {
 
 public:
 
+	/*
+	* ctor
+	*/
 	Happy();
 
-	void printHelp(char *argv[]);
+	/*
+	* print out command line options with descriptions
+	*/
+	void printHelp();
 
+	/*
+	* print out weights table in a clean format
+	*/
 	void prettyPrintWeights();
 
+	/*
+	* print out adjacency matrix in a clean format
+	*/
 	void prettyPrintGraph();
 
-	unsigned int getMode(int argc, char * argv[]);
+	/*
+	* reads in command line args, sets algorithm.
+	*/
+	void getMode(int argc, char * argv[]);
 
 private:
 
+	// adjacency matrix representing graph.
+	// outer vector is littles, inner vector is bigs
 	std::vector<std::vector<int>> graph;
+
+	// which algorithm we want to use.
+	// 0 -> prioritize strong connections
+	// 1 -> prioritize maximum group happiness
 	bool algo = 0;
 
 
