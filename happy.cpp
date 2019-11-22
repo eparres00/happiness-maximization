@@ -1,15 +1,17 @@
 #include <getopt.h>
 #include <iostream>
-#include <string>
 #include <algorithm>
+#include <string>
+#include <vector>
+#include <utility>
 #include "happy.h"
+#include "csvstream.h"
 
 // ctor
-Happy::Happy() {
+Happy::Happy() {}
 
-}
-
-void Happy::printHelp() {
+void Happy::printHelp()
+{
     std::cout << "Happiness Maximization Help:";
     std::cout << "\n============================\n\n";
     std::cout << "--algorithm\t-a\t\tspecifiy algorithm to use. Options are:\n";
@@ -19,7 +21,6 @@ void Happy::printHelp() {
     std::cout << "--show-weights\t-w\t\tpretty print the weights file\n";
     std::cout << "--show-graph\t-g\t\tpretty print the graph from the input file\n";
     std::cout << "--help\t\t-h\t\tprint help output\n";
-
 }
 
 void Happy::prettyPrintWeights()
@@ -34,21 +35,29 @@ void Happy::prettyPrintGraph()
 
 void Happy::initializeWeights(std::string weight_filename)
 {
-    
+    std::ifstream sstream;
+
+    std::string line = "";
+    std::string weight;
+    while(sstream >> line)
+    {
+        std::getline(std::cin, weight, ',');
+    }
+
 }
 
 void Happy::initializeGraph(std::string big_filename, std::string little_filename)
 {
-    
 }
 
 // Process the command line
-void Happy::initializeFlags(int argc, char * argv[])
+void Happy::initializeFlags(int argc, char *argv[])
 {
     // do nothing if invalid use
-    if(argc != 4)
+    if (argc != 4)
     {
-        std::cerr << "Error: invalid use\n" << std::endl;
+        std::cerr << "Error: invalid use\n"
+                  << std::endl;
         printHelp();
         exit(0);
     }
@@ -60,12 +69,11 @@ void Happy::initializeFlags(int argc, char * argv[])
     option long_options[] = {
         // TODO: Fill in two lines, for the "mode" ('m') and
         // the "help" ('h') options.
-		{ "algorithm",      required_argument, nullptr, 'a' },
-		{ "show-weights",   no_argument,       nullptr, 'w' },
-		{ "show-graph",     no_argument,       nullptr, 'g' },
-		{ "help",           no_argument,       nullptr, 'h' },
-        { nullptr,          0,                 nullptr, '\0' }
-    };
+        {"algorithm", required_argument, nullptr, 'a'},
+        {"show-weights", no_argument, nullptr, 'w'},
+        {"show-graph", no_argument, nullptr, 'g'},
+        {"help", no_argument, nullptr, 'h'},
+        {nullptr, 0, nullptr, '\0'}};
 
     while ((choice = getopt_long(argc, argv, "a:wgh", long_options, &option_index)) != -1)
     {
@@ -92,7 +100,7 @@ void Happy::initializeFlags(int argc, char * argv[])
         case 'w':
             prettyPrintWeights();
             break;
-        
+
         case 'g':
             prettyPrintGraph();
             break;
@@ -104,7 +112,7 @@ void Happy::initializeFlags(int argc, char * argv[])
     }
 }
 
-void Happy::initializeInputs(int argc, char * argv[])
+void Happy::initializeInputs(int argc, char *argv[])
 {
     // process command line flags
     this->initializeFlags(argc, argv);
@@ -117,34 +125,29 @@ void Happy::initializeInputs(int argc, char * argv[])
     // fill in graph and weights
     this->initializeWeights(weights_filename);
     this->initializeGraph(bigs_filename, littles_filename);
-
 }
 
 void Happy::matchLocallyOptimal()
 {
-
 }
 
 void Happy::matchGloballyOptimal()
 {
-
 }
 
 void Happy::match()
 {
 
-    if(!algo)
+    if (!algo)
     {
         matchLocallyOptimal();
     }
     else
     {
-        matchGloballyOptimal(); 
+        matchGloballyOptimal();
     }
-
 }
 
 void Happy::printResults()
 {
-    
 }
