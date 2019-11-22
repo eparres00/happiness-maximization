@@ -32,9 +32,26 @@ void Happy::prettyPrintGraph()
     // TODO: implement
 }
 
-// Process the command line
-void Happy::getMode(int argc, char * argv[])
+void initializeWeights(std::string weight_filename)
 {
+    
+}
+
+void initializeGraph(std::string big_filename, std::string little_filename)
+{
+    
+}
+
+// Process the command line
+void Happy::initializeFlags(int argc, char * argv[])
+{
+    // do nothing if invalid use
+    if(argc != 4)
+    {
+        std::cerr << "Error: invalid use\n" << std::endl;
+        printHelp();
+        exit(0);
+    }
 
     // These are used with getopt_long()
     opterr = true; // Give us help with errors
@@ -85,4 +102,36 @@ void Happy::getMode(int argc, char * argv[])
             exit(1);
         }
     }
+}
+
+void Happy::initializeInputs(int argc, char * argv[])
+{
+    // process command line flags
+    this->initializeFlags(argc, argv);
+
+    // grab filenames
+    std::string weights_filename = std::string(argv[1]);
+    std::string bigs_filename = std::string(argv[2]);
+    std::string littles_filename = std::string(argv[3]);
+
+    // fill in graph and weights
+    this->initializeWeights(weights_filename);
+    this->initializeGraph(bigs_filename, littles_filename);
+
+}
+
+void Happy::match()
+{
+
+    if(!algo)
+    {
+        matchLocallyOptimal();
+    }
+    else
+    {
+        matchGloballyOptimal(); 
+    }
+
+    printResults();
+
 }
