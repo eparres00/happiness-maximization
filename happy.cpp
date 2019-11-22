@@ -32,12 +32,12 @@ void Happy::prettyPrintGraph()
     // TODO: implement
 }
 
-void initializeWeights(std::string weight_filename)
+void Happy::initializeWeights(std::string weight_filename)
 {
     
 }
 
-void initializeGraph(std::string big_filename, std::string little_filename)
+void Happy::initializeGraph(std::string big_filename, std::string little_filename)
 {
     
 }
@@ -120,6 +120,16 @@ void Happy::initializeInputs(int argc, char * argv[])
 
 }
 
+void Happy::matchLocallyOptimal()
+{
+
+}
+
+void Happy::matchGloballyOptimal()
+{
+
+}
+
 void Happy::match()
 {
 
@@ -132,6 +142,9 @@ void Happy::match()
         matchGloballyOptimal(); 
     }
 
-    printResults();
+}
 
+void Happy::printResults()
+{
+    
 }

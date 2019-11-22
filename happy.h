@@ -14,6 +14,23 @@ public:
 	Happy();
 
 	/*
+	* read in values provided into internal data structures
+	*/
+	void initializeInputs(int argc, char * argv[]);
+
+	/*
+	* match bigs and littles depending on algo choice
+	*/
+	void match();
+
+	/*
+	* display matching results
+	*/
+	void printResults();
+
+private:
+
+	/*
 	* print out command line options with descriptions
 	*/
 	void printHelp();
@@ -39,11 +56,11 @@ public:
 	*
 	*     	    evan    jorge   zach  sydney
 	*         +------+-------+------+------+
-	*   ryan  |      |       |   x  |      |
+	*   ryan  |   x  |       |   x  |      |
 	*         +------+-------+------+------+
-	* rachel  |      |       |   x  |      |
+	* rachel  |      |       |   x  |   x  |
 	*         +------+-------+------+------+
-	*   will  |  x   |       |      |      |
+	*   will  |  x   |   X   |      |      |
 	*         +------+-------+------+------+
 	* andrew  |      |   x   |      |   x  |
 	*         +------+-------+------+------+
@@ -68,16 +85,6 @@ public:
 	void initializeFlags(int argc, char * argv[]);
 
 	/*
-	* read in values provided into internal data structures
-	*/
-	void initializeInputs(int argc, char * argv[]);
-
-	/*
-	* match bigs and littles depending on algo choice
-	*/
-	void match();
-
-	/*
 	* iterate through set of all edges, picking the maxmium edge
 	* each iteration. once a pairing is made, remove all edges connecting
 	* to those people
@@ -88,13 +95,6 @@ public:
 	* DP algorithm to find max of (Take, Not Take) of every edge
 	*/
 	void matchGloballyOptimal();
-
-	/*
-	* display matching results
-	*/
-	void printResults();
-
-private:
 
 	// adjacency matrix representing graph.
 	// outer vector is littles, inner vector is bigs
