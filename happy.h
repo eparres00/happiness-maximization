@@ -117,12 +117,16 @@ private:
 	std::vector<std::vector<double>> weights;
 
 	// names of bigs corresponding to index in graph.
-	// index is the order in which they were specified in the csv file
+	// index is the order in which they were specified in the csv file.
+	// store vector of inx -> name for printing ease
 	std::unordered_map<std::string, unsigned int> big_names;
+	std::vector<std::string> big_name_vec;
 
 	// names of littles corresponding to index in graph.
-	// index is the order in which they were specified in the csv file
+	// index is the order in which they were specified in the csv file.
+	// store vector of inx -> name for printing ease
 	std::unordered_map<std::string, unsigned int> little_names;
+	std::vector<std::string> little_name_vec;
 
 	// must keep track of flags since it changes the 
 	// position of the filenames in argv array

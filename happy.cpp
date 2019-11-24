@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <map>
+#include <cassert>
 #include "happy.h"
 #include "utils.h"
 
@@ -30,11 +31,11 @@ void Happy::prettyPrintWeights()
     std::cout << "\n";
 
     // print all vals
-    for(int i = 0; i < weights.size(); ++i)
+    for(unsigned int i = 0; i < weights.size(); ++i)
     {
         std::cout << "  +-----+-----+-----+-----+\n";
         std::cout << i << " |"; // print size index
-        for(int j = 0; j < weights[i].size(); ++j)
+        for(unsigned int j = 0; j < weights[i].size(); ++j)
         {
             utils::printValCentered(weights[i][j], 5);
             std::cout << "|";
@@ -47,9 +48,9 @@ void Happy::prettyPrintWeights()
 
 void Happy::prettyPrintGraph()
 {
-    // title and indexes
+    // title and names
     std::cout << "\nGraph\n=======\n\n";
-    // TODO: print top indexes
+    // TODO: print little names
     std::cout << "\n";
 
     std::string horz_line = "  +-----+";
@@ -61,7 +62,7 @@ void Happy::prettyPrintGraph()
     for(unsigned int i = 0; i < graph.size(); ++i)
     {
         std::cout << horz_line;
-        std::cout << i << " |"; // print size index
+        std::cout << big_name_vec[i] << " |"; // TODO: justify big names
         for(unsigned int j = 0; j < graph[i].size(); ++j)
         {
             utils::printValCentered(graph[i][j], 5);
@@ -112,6 +113,7 @@ void Happy::initializeNames(std::string big_filename, std::string little_filenam
         // grab big name and insert into map
         std::string big_name = split_line[0];
         big_names[big_name] = line_num++;
+        big_name_vec.emplace_back(big_name);
     }
 
     // LITTLES
@@ -122,6 +124,7 @@ void Happy::initializeNames(std::string big_filename, std::string little_filenam
         std::vector<std::string> split_line = utils::splitByDelimiter(line, ',');
         std::string little_name = split_line[0];
         little_names[little_name] = line_num++;
+        little_name_vec.emplace_back(little_name);
     }
 
     // big and little name maps should be filled!
@@ -164,11 +167,12 @@ void Happy::initializeGraph(std::string big_filename, std::string little_filenam
         // fill map of name -> list of names
         std::string big_name = split_line[0];
         // TODO: insert into edges set here??
-        for(unsigned int i = 1; i < split_line.size(); ++i)
+        for(unsigned int i = 1; i < split_line.size(); i++)
         {
             // mark the pair {big, little} as {big_rank, 0}
             // (little rank will be filled in later)
-            name_pair_map[{big_name, split_line[i]}] = {i, 0};
+            std::string little_name = split_line[i];
+            name_pair_map[{big_name, little_name}] = {i, 0};
         }
 
     }
@@ -183,10 +187,11 @@ void Happy::initializeGraph(std::string big_filename, std::string little_filenam
         // fill map of name -> list of names
         std::string little_name = split_line[0];
         // TODO: insert into edges set here??
-        for(unsigned int i = 1; i < split_line.size(); ++i)
+        for(unsigned int i = 1; i < split_line.size(); i++)
         {
             // mark the pair {big, little} as having little rank i
-            name_pair_map[{split_line[i], little_name}].second = i;
+            std::string big_name = split_line[i];
+            name_pair_map[{big_name, little_name}].second = i;
         }
 
     }
@@ -196,10 +201,15 @@ void Happy::initializeGraph(std::string big_filename, std::string little_filenam
     {
         //  0       first            second
         //  1  {first, second} -> {first, second}
+        std::string big_name = entry.first.first;
+        std::string little_name = entry.first.second;
+
+        assert(big_names.find(big_name) != big_names.end());
+        assert(little_names.find(little_name) != little_names.end());
 
         // used for indexing graph
-        unsigned int big_graph_idx = big_names[entry.first.first];
-        unsigned int little_graph_idx = little_names[entry.first.second];
+        unsigned int big_graph_idx = big_names[big_name];
+        unsigned int little_graph_idx = little_names[little_name];
         // grab the rank each person gave each other
         unsigned int big_rank = entry.second.first;
         unsigned int little_rank = entry.second.second;
@@ -258,12 +268,10 @@ void Happy::initializeFlags(int argc, char *argv[])
             break;
 
         case 'w':
-            std::cout << "case w\n";
             this->print_weights = true;
             break;
 
         case 'g':
-            std::cout << "case g\n";
             this->print_graph = true;
             break;
 
@@ -284,10 +292,6 @@ void Happy::initializeInputs(int argc, char *argv[])
     std::string weights_filename = std::string(argv[first_file_idx]);
     std::string bigs_filename = std::string(argv[first_file_idx + 1]);
     std::string littles_filename = std::string(argv[first_file_idx + 2]);
-
-    std::cout << "weights file " << weights_filename << "\n";
-    std::cout << "bigs file " << bigs_filename << "\n";
-    std::cout << "littles file " << littles_filename << "\n";
 
     // fill in graph and weights
     this->initializeWeights(weights_filename);
