@@ -57,13 +57,13 @@ private:
 	*
 	*     	    evan    jorge   zach  sydney
 	*         +------+-------+------+------+
-	*   ryan  |   x  |       |   x  |      |
+	*   ryan  | 85.6  |   0   | 100 |  67  |
 	*         +------+-------+------+------+
-	* rachel  |      |       |   x  |   x  |
+	* rachel  |  0   |   15   |  99 |  95  |
 	*         +------+-------+------+------+
-	*   will  |  x   |   X   |      |      |
+	*   will  | 100  |   45  |  69  |  0   |
 	*         +------+-------+------+------+
-	* andrew  |      |   x   |      |   x  |
+	* andrew  |  86  |   87  |   0  |  80  |
 	*         +------+-------+------+------+
 	*
 	*/
@@ -118,15 +118,21 @@ private:
 
 	// names of bigs corresponding to index in graph.
 	// index is the order in which they were specified in the csv file.
-	// store vector of inx -> name for printing ease
+	// store vector of idx -> name for printing ease
 	std::unordered_map<std::string, unsigned int> big_names;
 	std::vector<std::string> big_name_vec;
 
 	// names of littles corresponding to index in graph.
 	// index is the order in which they were specified in the csv file.
-	// store vector of inx -> name for printing ease
+	// store vector of idx -> name for printing ease
 	std::unordered_map<std::string, unsigned int> little_names;
 	std::vector<std::string> little_name_vec;
+
+	// map of {big, little} -> happiness score
+	std::map<std::pair<std::string, std::string>, unsigned int> results;
+
+	// keep track of total compatibility score for algo
+	unsigned int total_happiness = 0;
 
 	// must keep track of flags since it changes the 
 	// position of the filenames in argv array

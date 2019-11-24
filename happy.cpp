@@ -300,9 +300,6 @@ void Happy::initializeInputs(int argc, char *argv[])
 
     if(this->print_weights) { prettyPrintWeights(); }
     if(this->print_graph) { prettyPrintGraph(); }
-
-    // run the matching algorithm!
-    this->match();
 }
 
 void Happy::matchRandom()
