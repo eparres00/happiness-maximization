@@ -75,6 +75,12 @@ private:
 	void initializeWeights(std::string weight_filename);
 
 	/*
+	* make map of big and little names to index in the file.
+	* used for graph initialization
+	*/
+	void initializeNames(std::string big_filename, std::string little_filename);
+
+	/*
 	* read in values for graph from the files
 	* requires weights to be initialized
 	*/
@@ -84,6 +90,11 @@ private:
 	* reads in command line args, sets algorithm.
 	*/
 	void initializeFlags(int argc, char * argv[]);
+
+	/*
+	* randomly match pairs. used for benchmarking
+	*/
+	void matchRandom();
 
 	/*
 	* iterate through set of all edges, picking the maxmium edge
@@ -113,11 +124,16 @@ private:
 	// index is the order in which they were specified in the csv file
 	std::unordered_map<std::string, unsigned int> little_names;
 
+	// must keep track of flags since it changes the 
+	// position of the filenames in argv array
+	unsigned int first_file_idx = 1;
+
 	// which algorithm we want to use.
 	// 0 -> prioritize strong connections (local)
 	// 1 -> prioritize maximum group happiness (global)
-	bool algo = 0;
-
+	bool algo = false;
+	bool print_weights = false;
+	bool print_graph = false;
 
 };
 

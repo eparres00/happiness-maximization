@@ -1,9 +1,10 @@
 #include <iostream>
 #include <iomanip>
 #include <algorithm>
+#include <cassert>
 #include "utils.h"
 
-std::vector<std::string> utils::splitByDelimiter(std::string str, char delimiter)
+std::vector<std::string> utils::splitByDelimiter(const std::string str, char delimiter)
 {
 	std::vector<std::string> split_string;
 	std::vector<unsigned int> indexes;
@@ -16,15 +17,19 @@ std::vector<std::string> utils::splitByDelimiter(std::string str, char delimiter
 	indexes.push_back(str.length());
 
 	// fill results with everything besides delimeters
-	unsigned int end_idx = 0, begin_idx = 0;
-	for(unsigned int i = 0; i < indexes.size(); ++i)
+	unsigned int end_idx = 0, begin_idx = 0, len = 0;
+	for(unsigned int i = 0; i < indexes.size(); i++)
 	{
 		end_idx = indexes[i];
+		// how long to make the substring after begin_idx
+		len = end_idx - begin_idx;
 		// insert the substring into the results vector.
 		// don't make a copy every time with emplace
-		split_string.emplace_back(str.substr(begin_idx, end_idx));
-		begin_idx = end_idx + 1; // +1 since substr is inclusive on begin
+		split_string.emplace_back(str.substr(begin_idx, len));
+		begin_idx = end_idx + 2; // +1 since substr is inclusive on begin, +1 more for ignoring space
 	}
+
+	assert(split_string.size() == indexes.size());
 
 	return split_string;
 }

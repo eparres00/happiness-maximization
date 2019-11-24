@@ -1,6 +1,7 @@
 #include <getopt.h>
 #include <iostream>
 #include <fstream>
+#include <map>
 #include "happy.h"
 #include "utils.h"
 
@@ -24,7 +25,7 @@ void Happy::prettyPrintWeights()
 {
 
     // title and indexes
-    std::cout << "Weights\n=======\n\n";
+    std::cout << "\nWeights\n=======\n\n";
     // TODO: print top indexes
     std::cout << "\n";
 
@@ -38,17 +39,44 @@ void Happy::prettyPrintWeights()
             utils::printValCentered(weights[i][j], 5);
             std::cout << "|";
         }
-        std::cout << std::endl;
+        std::cout << "\n";
     }
+
+    std::cout << "\n";
 }
 
 void Happy::prettyPrintGraph()
 {
-    // TODO: implement
+    // title and indexes
+    std::cout << "\nGraph\n=======\n\n";
+    // TODO: print top indexes
+    std::cout << "\n";
+
+    std::string horz_line = "  +-----+";
+    for(unsigned int i = 0; i < graph[0].size(); ++i) {
+        horz_line += "-----+";
+    }
+    horz_line += "\n";
+
+    for(unsigned int i = 0; i < graph.size(); ++i)
+    {
+        std::cout << horz_line;
+        std::cout << i << " |"; // print size index
+        for(unsigned int j = 0; j < graph[i].size(); ++j)
+        {
+            utils::printValCentered(graph[i][j], 5);
+            std::cout << "|";
+        }
+        std::cout << "\n";
+    }
+    std::cout << "\n";
+
 }
 
 void Happy::initializeWeights(std::string weight_filename)
 {
+    std::cout << "initializing weights...\n";
+
     std::ifstream sstream(weight_filename);
     std::string line;
 
@@ -71,6 +99,8 @@ void Happy::initializeWeights(std::string weight_filename)
 
 void Happy::initializeNames(std::string big_filename, std::string little_filename)
 {
+    std::cout << "initializing name maps...\n";
+
     // BIGS
     std::ifstream big_stream(big_filename);
     std::string line;
@@ -84,7 +114,7 @@ void Happy::initializeNames(std::string big_filename, std::string little_filenam
         big_names[big_name] = line_num++;
     }
 
-    // LITTLEs
+    // LITTLES
     std::ifstream little_stream(little_filename);
     line_num = 0;
     while(std::getline(little_stream, line, '\n'))
@@ -94,24 +124,101 @@ void Happy::initializeNames(std::string big_filename, std::string little_filenam
         little_names[little_name] = line_num++;
     }
 
-    // maps should be filled!
+    // big and little name maps should be filled!
 }
 
 void Happy::initializeGraph(std::string big_filename, std::string little_filename)
 {
-    
+    /* 
+    *   Overview: 
+    *       store intermediate data of list of {big, little} name pairs
+    *       to {big_rank, little_rank} pair. use info to fill in graph
+    *
+    *       big_rank = what the big ranked the little
+    *       little_rank = what the little ranked the big
+    */
+
+    std::cout << "initializing graph...\n";
+
+    // GRAPH SIZE INITIALIZATION
+    // =========================
+    // allocate num_bigs rows in graph
+    graph.resize(big_names.size());
+    // allocate num_littles cols in graph. initialize val to 0
+    for(auto& col : graph) { col.resize(little_names.size(), 0); }
+    // =========================
+
+    // NAME PAIR MAP
+    // {big, little} -> {big_rank, little_rank}
+    // ===================
+    std::map<std::pair<std::string, std::string>, std::pair<unsigned int, unsigned int>> name_pair_map;
+
+    // BIGS
+    std::ifstream big_stream(big_filename);
+    std::string line;
+    // read in big file line by line
+    while(std::getline(big_stream, line, '\n'))
+    {
+        // split the line up by commas
+        std::vector<std::string> split_line = utils::splitByDelimiter(line, ',');
+        // fill map of name -> list of names
+        std::string big_name = split_line[0];
+        // TODO: insert into edges set here??
+        for(unsigned int i = 1; i < split_line.size(); ++i)
+        {
+            // mark the pair {big, little} as {big_rank, 0}
+            // (little rank will be filled in later)
+            name_pair_map[{big_name, split_line[i]}] = {i, 0};
+        }
+
+    }
+
+    // LITTLES
+    std::ifstream little_stream(little_filename);
+    // read in big file line by line
+    while(std::getline(little_stream, line, '\n'))
+    {
+        // split the line up by commas
+        std::vector<std::string> split_line = utils::splitByDelimiter(line, ',');
+        // fill map of name -> list of names
+        std::string little_name = split_line[0];
+        // TODO: insert into edges set here??
+        for(unsigned int i = 1; i < split_line.size(); ++i)
+        {
+            // mark the pair {big, little} as having little rank i
+            name_pair_map[{split_line[i], little_name}].second = i;
+        }
+
+    }
+
+    // FILL GRAPH
+    for(auto& entry : name_pair_map)
+    {
+        //  0       first            second
+        //  1  {first, second} -> {first, second}
+
+        // used for indexing graph
+        unsigned int big_graph_idx = big_names[entry.first.first];
+        unsigned int little_graph_idx = little_names[entry.first.second];
+        // grab the rank each person gave each other
+        unsigned int big_rank = entry.second.first;
+        unsigned int little_rank = entry.second.second;
+
+        // get the weight associated with the rankings given
+        double weight = weights[big_rank][little_rank];
+
+        // set the graph at {big, little} to have apprpriate edge weight
+        graph[big_graph_idx][little_graph_idx] = weight;
+    }
+
+    // graph should be full now!
+
 }
 
 // Process the command line
 void Happy::initializeFlags(int argc, char *argv[])
 {
     // do nothing if invalid use
-    // if (argc != 4)
-    // {
-    //     std::cerr << "Error: invalid use\n" << std::endl;
-    //     printHelp();
-    //     exit(1);
-    // }
 
     // These are used with getopt_long()
     opterr = true; // Give us help with errors
@@ -128,6 +235,7 @@ void Happy::initializeFlags(int argc, char *argv[])
 
     while ((choice = getopt_long(argc, argv, "a:wgh", long_options, &option_index)) != -1)
     {
+        this->first_file_idx++;
 
         switch (choice)
         {
@@ -141,23 +249,26 @@ void Happy::initializeFlags(int argc, char *argv[])
             // any other input is invalid
             if (atoi(optarg) > 1)
             {
-                std::cerr << "Error: invalid algo " << atoi(optarg) << std::endl;
+                std::cerr << "Error: invalid algo " << atoi(optarg) << "\n";
                 exit(1);
             }
             // set class algo flag
             this->algo = atoi(optarg);
+            this->first_file_idx++;
             break;
 
         case 'w':
-            prettyPrintWeights();
+            std::cout << "case w\n";
+            this->print_weights = true;
             break;
 
         case 'g':
-            prettyPrintGraph();
+            std::cout << "case g\n";
+            this->print_graph = true;
             break;
 
         default:
-            std::cerr << "Error: invalid option" << std::endl;
+            std::cerr << "Error: invalid option\n";
             exit(1);
         }
     }
@@ -165,26 +276,44 @@ void Happy::initializeFlags(int argc, char *argv[])
 
 void Happy::initializeInputs(int argc, char *argv[])
 {
+
+    // process command line flags
+    this->initializeFlags(argc, argv);
+
     // grab filenames
-    std::string weights_filename = std::string(argv[1]);
-    std::string bigs_filename = std::string(argv[2]);
-    std::string littles_filename = std::string(argv[3]);
+    std::string weights_filename = std::string(argv[first_file_idx]);
+    std::string bigs_filename = std::string(argv[first_file_idx + 1]);
+    std::string littles_filename = std::string(argv[first_file_idx + 2]);
+
+    std::cout << "weights file " << weights_filename << "\n";
+    std::cout << "bigs file " << bigs_filename << "\n";
+    std::cout << "littles file " << littles_filename << "\n";
 
     // fill in graph and weights
     this->initializeWeights(weights_filename);
     this->initializeNames(bigs_filename, littles_filename);
     this->initializeGraph(bigs_filename, littles_filename);
 
-    // process command line flags
-    this->initializeFlags(argc, argv);
+    if(this->print_weights) { prettyPrintWeights(); }
+    if(this->print_graph) { prettyPrintGraph(); }
+
+    // run the matching algorithm!
+    this->match();
+}
+
+void Happy::matchRandom()
+{
+
 }
 
 void Happy::matchLocallyOptimal()
 {
+
 }
 
 void Happy::matchGloballyOptimal()
 {
+
 }
 
 void Happy::match()
@@ -202,4 +331,5 @@ void Happy::match()
 
 void Happy::printResults()
 {
+
 }
