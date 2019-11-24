@@ -1,7 +1,7 @@
 CC=g++ -g -Wall -fno-builtin
 
 # List of source files for your pager
-HAPPY_SOURCES=main.cpp happy.cpp
+HAPPY_SOURCES=main.cpp happy.cpp utils.cpp
 
 # Generate the names of the pager's object files
 HAPPY_OBJS=${HAPPY_SOURCES:.cpp=.o}

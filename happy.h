@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <unordered_map>
 
 class Happy {
 
@@ -98,17 +99,19 @@ private:
 
 	// adjacency matrix representing graph.
 	// outer vector is littles, inner vector is bigs
-	std::vector<std::vector<unsigned int>> graph;
+	std::vector<std::vector<double>> graph;
 
 	// table of values for certain connections
 	// row index is big's ranking, column is little's ranking
-	std::vector<std::vector<unsigned int>> weights;
+	std::vector<std::vector<double>> weights;
 
-	// names of bigs in order of the csv
-	std::vector<std::string> big_names;
+	// names of bigs corresponding to index in graph.
+	// index is the order in which they were specified in the csv file
+	std::unordered_map<std::string, unsigned int> big_names;
 
-	// names of littles in order of the csv
-	std::vector<std::string> little_names;
+	// names of littles corresponding to index in graph.
+	// index is the order in which they were specified in the csv file
+	std::unordered_map<std::string, unsigned int> little_names;
 
 	// which algorithm we want to use.
 	// 0 -> prioritize strong connections (local)
