@@ -12,14 +12,9 @@ Here are the contents we require in each (all cells are 0 indexed):
 
 ![weights picture](/misc/weights.png)
 
-`big-rankings.csv`: Little's preferences of Bigs. 1st column contains the name of the Little, 2nd column is that Little's 1st choice of Big, 3rd column is that Little's 2nd choice of Big, 4th column is that Little's 3rd choice of Big
+`big-rankings.csv`: Big's preferences of Littles. 1st column contains the name of the Big, 2nd column is that Little's 1st choice of Little, 3rd column is the 2nd choice of Little, 4th column is the 3rd choice of Little         
 
-
-`big-rankings.csv`: Preferences of bigs. Rows represent
-
-`little-rankings.csv`:
-
-`little-rankings.csv`: Big's preferences of Littles. 1st column contains the name of the Big, 2nd column is that Big's 1st choice of Little, 3rd column is that Big's 2nd choice of Little, 4th column is that Big's 3rd choice of Little
+`little-rankings.csv`: Little's preferences of Bigs. 1st column contains the name of the Little, 2nd column is that Little's 1st choice of big, 3rd column is the 2nd choice of Big, 4th column is the 3rd choice of Little     
 
 ## How it Works
 
