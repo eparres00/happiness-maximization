@@ -38,8 +38,9 @@ describe the algorithms
    
    `$ ./happy weights.csv big-rankings.csv little-rankings.csv <FLAGS>`     
 
-   Here are the available flags and possible inputs to them:     
-   | Long Name | Short Name | Description | Options|
+   Here are the available flags and possible inputs to them:    
+   
+   | Long Name | Short Name | Description | Options |
    |:---------:|:----------:|:-----------|:------|
    |--algorithm|     -a     | specifiy algorithm to use | 0 : prioritize high connections (locally optimal) |
    |		   |            |             | 1 : prioritize maximum group satisfaction (globally optimal) |
