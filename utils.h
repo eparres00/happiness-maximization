@@ -15,6 +15,25 @@ namespace utils {
 	* prints a value centered given the number of total spaces allowed
 	*/
 	void printValCentered(double val, unsigned int total_spaces);
+	
+	struct HeapEntry {
+		double weight;
+		unsigned int big_idx;
+		unsigned int little_idx;
+	};
+
+	/*
+	* functor used for heap in locally optimal algo
+	* { {big_name, little_name} , weight }
+	*/
+	struct HeapEntryCompLess
+	{
+		bool operator()(const HeapEntry &lhs, const HeapEntry &rhs)
+		{
+			return lhs.weight < rhs.weight;
+		}
+	};
+
 }
 
 #endif

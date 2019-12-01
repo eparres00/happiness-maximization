@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <unordered_map>
+#include <map>
 
 class Happy {
 
@@ -129,7 +130,7 @@ private:
 	std::vector<std::string> little_name_vec;
 
 	// map of {big, little} -> happiness score
-	std::map<std::pair<std::string, std::string>, unsigned int> results;
+	std::map<std::pair<std::string, std::string>, double> results;
 
 	// keep track of total compatibility score for algo
 	unsigned int total_happiness = 0;

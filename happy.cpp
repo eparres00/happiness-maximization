@@ -3,6 +3,7 @@
 #include <fstream>
 #include <map>
 #include <cassert>
+#include <queue>
 #include "happy.h"
 #include "utils.h"
 
@@ -309,7 +310,22 @@ void Happy::matchRandom()
 
 void Happy::matchLocallyOptimal()
 {
+    std::priority_queue<utils::HeapEntry, std::vector<utils::HeapEntry>, utils::HeapEntryCompLess> heap;
 
+    // insert all edges
+    for(unsigned int i = 0; i < graph.size(); ++i)
+    {
+        for(unsigned int j = 0; j < graph[0].size(); ++j)
+        {
+            // insert the pair of
+            // { {big_idx, little_idx,}, weight }
+            heap.push({weights[i][j], i, j});
+        }
+    }
+
+
+
+    std::cout << heap.top().weight << "\n";
 }
 
 void Happy::matchGloballyOptimal()
