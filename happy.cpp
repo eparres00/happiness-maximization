@@ -4,6 +4,7 @@
 #include <map>
 #include <cassert>
 #include <queue>
+#include <set>
 #include "happy.h"
 #include "utils.h"
 
@@ -310,7 +311,11 @@ void Happy::matchRandom()
 
 void Happy::matchLocallyOptimal()
 {
+    std::set<unsigned int> bigs_taken;
+    std::set<unsigned int> littles_taken;
     std::priority_queue<utils::HeapEntry, std::vector<utils::HeapEntry>, utils::HeapEntryCompLess> heap;
+
+    std::cout << "here";
 
     // insert all edges
     for(unsigned int i = 0; i < graph.size(); ++i)
@@ -323,9 +328,30 @@ void Happy::matchLocallyOptimal()
         }
     }
 
+    // repeat until all littles have been matched
+    std::cout << "little name vec size: " << little_name_vec.size();
+    while (littles_taken.size() != little_name_vec.size())
+    {
+        // take from top of heap
+        utils::HeapEntry entry = heap.top();
+        heap.pop();
 
+        bool big_matched = bigs_taken.find(entry.big_idx) != bigs_taken.end();
+        bool little_matched = littles_taken.find(entry.little_idx) != littles_taken.end();
 
-    std::cout << heap.top().weight << "\n";
+        // skip this edge if either the big or little has been matched
+        if(big_matched || little_matched)
+            continue;
+
+        std::string big_name = big_name_vec[entry.big_idx];      
+        std::string little_name = little_name_vec[entry.little_idx];
+
+        // mark the edge as 'taken'
+        results[{big_name, little_name}] = entry.weight;
+        bigs_taken.insert(entry.big_idx);
+        littles_taken.insert(entry.little_idx);
+    }
+
 }
 
 void Happy::matchGloballyOptimal()
@@ -335,7 +361,6 @@ void Happy::matchGloballyOptimal()
 
 void Happy::match()
 {
-
     if (!algo)
     {
         matchLocallyOptimal();
@@ -348,5 +373,10 @@ void Happy::match()
 
 void Happy::printResults()
 {
-
+    // for(auto& entry : results)
+    // {
+    //     std::cout << "big name: " << entry.first.first << "\n";
+    //     std::cout << "little name: " << entry.first.second << "\n";
+    //     std::cout << "weight: " << entry.second << "\n";
+    // }
 }
