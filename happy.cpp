@@ -33,11 +33,11 @@ void Happy::prettyPrintWeights()
     std::cout << "\n";
 
     // print all vals
-    for(unsigned int i = 0; i < weights.size(); ++i)
+    for (unsigned int i = 0; i < weights.size(); ++i)
     {
         std::cout << "  +-----+-----+-----+-----+\n";
         std::cout << i << " |"; // print size index
-        for(unsigned int j = 0; j < weights[i].size(); ++j)
+        for (unsigned int j = 0; j < weights[i].size(); ++j)
         {
             utils::printValCentered(weights[i][j], 5);
             std::cout << "|";
@@ -56,16 +56,17 @@ void Happy::prettyPrintGraph()
     std::cout << "\n";
 
     std::string horz_line = "  +-----+";
-    for(unsigned int i = 0; i < graph[0].size(); ++i) {
+    for (unsigned int i = 0; i < graph[0].size(); ++i)
+    {
         horz_line += "-----+";
     }
     horz_line += "\n";
 
-    for(unsigned int i = 0; i < graph.size(); ++i)
+    for (unsigned int i = 0; i < graph.size(); ++i)
     {
         std::cout << horz_line;
         std::cout << big_name_vec[i] << " |"; // TODO: justify big names
-        for(unsigned int j = 0; j < graph[i].size(); ++j)
+        for (unsigned int j = 0; j < graph[i].size(); ++j)
         {
             utils::printValCentered(graph[i][j], 5);
             std::cout << "|";
@@ -73,7 +74,6 @@ void Happy::prettyPrintGraph()
         std::cout << "\n";
     }
     std::cout << "\n";
-
 }
 
 void Happy::initializeWeights(std::string weight_filename)
@@ -84,14 +84,17 @@ void Happy::initializeWeights(std::string weight_filename)
     std::string line;
 
     // read in weights file line by line
-    while(std::getline(sstream, line, '\n'))
+    while (std::getline(sstream, line, '\n'))
     {
         // will hold all vals for this row
         std::vector<double> row;
         // split the line up by commas
         std::vector<std::string> split_line = utils::splitByDelimiter(line, ',');
         // fill row with integer values of the split string
-        for(std::string& entry : split_line) { row.push_back(stod(entry)); }
+        for (std::string &entry : split_line)
+        {
+            row.push_back(stod(entry));
+        }
 
         // insert the entire row into weights
         weights.emplace_back(row);
@@ -108,7 +111,7 @@ void Happy::initializeNames(std::string big_filename, std::string little_filenam
     std::ifstream big_stream(big_filename);
     std::string line;
     unsigned int line_num = 0;
-    while(std::getline(big_stream, line, '\n'))
+    while (std::getline(big_stream, line, '\n'))
     {
         // split the line up by commas
         std::vector<std::string> split_line = utils::splitByDelimiter(line, ',');
@@ -121,7 +124,7 @@ void Happy::initializeNames(std::string big_filename, std::string little_filenam
     // LITTLES
     std::ifstream little_stream(little_filename);
     line_num = 0;
-    while(std::getline(little_stream, line, '\n'))
+    while (std::getline(little_stream, line, '\n'))
     {
         std::vector<std::string> split_line = utils::splitByDelimiter(line, ',');
         std::string little_name = split_line[0];
@@ -129,6 +132,7 @@ void Happy::initializeNames(std::string big_filename, std::string little_filenam
         little_name_vec.emplace_back(little_name);
     }
 
+    assert(big_names.size() >= little_names.size());
     // big and little name maps should be filled!
 }
 
@@ -150,7 +154,10 @@ void Happy::initializeGraph(std::string big_filename, std::string little_filenam
     // allocate num_bigs rows in graph
     graph.resize(big_names.size());
     // allocate num_littles cols in graph. initialize val to 0
-    for(auto& col : graph) { col.resize(little_names.size(), 0); }
+    for (auto &col : graph)
+    {
+        col.resize(little_names.size(), 0);
+    }
     // =========================
 
     // NAME PAIR MAP
@@ -162,44 +169,42 @@ void Happy::initializeGraph(std::string big_filename, std::string little_filenam
     std::ifstream big_stream(big_filename);
     std::string line;
     // read in big file line by line
-    while(std::getline(big_stream, line, '\n'))
+    while (std::getline(big_stream, line, '\n'))
     {
         // split the line up by commas
         std::vector<std::string> split_line = utils::splitByDelimiter(line, ',');
         // fill map of name -> list of names
         std::string big_name = split_line[0];
         // TODO: insert into edges set here??
-        for(unsigned int i = 1; i < split_line.size(); i++)
+        for (unsigned int i = 1; i < split_line.size(); i++)
         {
             // mark the pair {big, little} as {big_rank, 0}
             // (little rank will be filled in later)
             std::string little_name = split_line[i];
             name_pair_map[{big_name, little_name}] = {i, 0};
         }
-
     }
 
     // LITTLES
     std::ifstream little_stream(little_filename);
     // read in big file line by line
-    while(std::getline(little_stream, line, '\n'))
+    while (std::getline(little_stream, line, '\n'))
     {
         // split the line up by commas
         std::vector<std::string> split_line = utils::splitByDelimiter(line, ',');
         // fill map of name -> list of names
         std::string little_name = split_line[0];
         // TODO: insert into edges set here??
-        for(unsigned int i = 1; i < split_line.size(); i++)
+        for (unsigned int i = 1; i < split_line.size(); i++)
         {
             // mark the pair {big, little} as having little rank i
             std::string big_name = split_line[i];
             name_pair_map[{big_name, little_name}].second = i;
         }
-
     }
 
     // FILL GRAPH
-    for(auto& entry : name_pair_map)
+    for (auto &entry : name_pair_map)
     {
         //  0       first            second
         //  1  {first, second} -> {first, second}
@@ -224,7 +229,6 @@ void Happy::initializeGraph(std::string big_filename, std::string little_filenam
     }
 
     // graph should be full now!
-
 }
 
 // Process the command line
@@ -300,13 +304,18 @@ void Happy::initializeInputs(int argc, char *argv[])
     this->initializeNames(bigs_filename, littles_filename);
     this->initializeGraph(bigs_filename, littles_filename);
 
-    if(this->print_weights) { prettyPrintWeights(); }
-    if(this->print_graph) { prettyPrintGraph(); }
+    if (this->print_weights)
+    {
+        prettyPrintWeights();
+    }
+    if (this->print_graph)
+    {
+        prettyPrintGraph();
+    }
 }
 
 void Happy::matchRandom()
 {
-
 }
 
 void Happy::matchLocallyOptimal()
@@ -315,23 +324,22 @@ void Happy::matchLocallyOptimal()
     std::set<unsigned int> littles_taken;
     std::priority_queue<utils::HeapEntry, std::vector<utils::HeapEntry>, utils::HeapEntryCompLess> heap;
 
-    std::cout << "here";
-
     // insert all edges
-    for(unsigned int i = 0; i < graph.size(); ++i)
+    for (unsigned int i = 0; i < graph.size(); ++i)
     {
-        for(unsigned int j = 0; j < graph[0].size(); ++j)
+        for (unsigned int j = 0; j < graph[0].size(); ++j)
         {
             // insert the pair of
             // { {big_idx, little_idx,}, weight }
-            heap.push({weights[i][j], i, j});
+            heap.push({graph[i][j], i, j});
         }
     }
 
     // repeat until all littles have been matched
-    std::cout << "little name vec size: " << little_name_vec.size();
     while (littles_taken.size() != little_name_vec.size())
     {
+        assert(!heap.empty());
+
         // take from top of heap
         utils::HeapEntry entry = heap.top();
         heap.pop();
@@ -340,10 +348,10 @@ void Happy::matchLocallyOptimal()
         bool little_matched = littles_taken.find(entry.little_idx) != littles_taken.end();
 
         // skip this edge if either the big or little has been matched
-        if(big_matched || little_matched)
+        if (big_matched || little_matched)
             continue;
 
-        std::string big_name = big_name_vec[entry.big_idx];      
+        std::string big_name = big_name_vec[entry.big_idx];
         std::string little_name = little_name_vec[entry.little_idx];
 
         // mark the edge as 'taken'
@@ -351,12 +359,10 @@ void Happy::matchLocallyOptimal()
         bigs_taken.insert(entry.big_idx);
         littles_taken.insert(entry.little_idx);
     }
-
 }
 
 void Happy::matchGloballyOptimal()
 {
-
 }
 
 void Happy::match()
@@ -373,10 +379,10 @@ void Happy::match()
 
 void Happy::printResults()
 {
-    // for(auto& entry : results)
-    // {
-    //     std::cout << "big name: " << entry.first.first << "\n";
-    //     std::cout << "little name: " << entry.first.second << "\n";
-    //     std::cout << "weight: " << entry.second << "\n";
-    // }
+    std::cout << "\nResults\n=======\n\n";
+    std::cout << "big | little | weight\n=====================\n";
+    for(auto& entry : results)
+    {
+        std::cout << entry.first.first <<  " " << entry.first.second << " " << entry.second << "\n";
+    }
 }

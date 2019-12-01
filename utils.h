@@ -16,6 +16,7 @@ namespace utils {
 	*/
 	void printValCentered(double val, unsigned int total_spaces);
 	
+	
 	struct HeapEntry {
 		double weight;
 		unsigned int big_idx;
