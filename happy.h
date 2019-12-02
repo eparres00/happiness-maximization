@@ -110,7 +110,7 @@ private:
 	void matchGloballyOptimal();
 
 	// adjacency matrix representing graph.
-	// outer vector is littles, inner vector is bigs
+	// outer vector is bigs, inner vector is littles
 	std::vector<std::vector<double>> graph;
 
 	// table of values for certain connections
@@ -133,7 +133,9 @@ private:
 	std::map<std::pair<std::string, std::string>, double> results;
 
 	// keep track of total compatibility score for algo
-	unsigned int total_happiness = 0;
+	double total_happiness = 0;
+	// keep track of random happiness score for benchmarking
+	double total_random_happiness = 0;
 
 	// must keep track of flags since it changes the 
 	// position of the filenames in argv array

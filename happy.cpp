@@ -356,6 +356,7 @@ void Happy::matchLocallyOptimal()
 
         // mark the edge as 'taken'
         results[{big_name, little_name}] = entry.weight;
+        total_happiness+= entry.weight;
         bigs_taken.insert(entry.big_idx);
         littles_taken.insert(entry.little_idx);
     }
@@ -385,4 +386,7 @@ void Happy::printResults()
     {
         std::cout << entry.first.first <<  " " << entry.first.second << " " << entry.second << "\n";
     }
+
+    std::cout << "\ntotal happiness: " << total_happiness << "\n";
+
 }
