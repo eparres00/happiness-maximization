@@ -109,6 +109,11 @@ private:
 	*/
 	void matchGloballyOptimal();
 
+	/*
+	* Performs linear search on big names vector to find the longest name on the vector
+	*/
+	size_t findLongestBrotherName();
+
 	// adjacency matrix representing graph.
 	// outer vector is bigs, inner vector is littles
 	std::vector<std::vector<double>> graph;

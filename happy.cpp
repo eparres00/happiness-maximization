@@ -31,7 +31,12 @@ void Happy::prettyPrintWeights()
     std::cout << "\nWeights\n=======\n\n";
     // TODO: print top indexes
     std::cout << "\n";
-
+    std::cout << "  |";
+    for (int i = 0; i<4; ++i){
+        std::cout << "  "<< i << "  |";
+    }
+    std::cout << "\n";
+    
     // print all vals
     for (unsigned int i = 0; i < weights.size(); ++i)
     {
@@ -40,6 +45,7 @@ void Happy::prettyPrintWeights()
         for (unsigned int j = 0; j < weights[i].size(); ++j)
         {
             utils::printValCentered(weights[i][j], 5);
+            // std::cout << makeLengthsEqual(weights[i][j]);
             std::cout << "|";
         }
         std::cout << "\n";
@@ -49,26 +55,68 @@ void Happy::prettyPrintWeights()
 }
 
 void Happy::prettyPrintGraph()
-{
+{   
+    size_t max_length_name = findLongestBrotherName();
+    std::vector<size_t> littleNamesLength;
     // title and names
     std::cout << "\nGraph\n=======\n\n";
-    // TODO: print little names
-    std::cout << "\n";
 
-    std::string horz_line = "  +-----+";
-    for (unsigned int i = 0; i < graph[0].size(); ++i)
+    std::cout << " ";
+
+    for (unsigned int i = 0; i < max_length_name; ++i)
     {
-        horz_line += "-----+";
+        std::cout << " ";
+    }
+
+    for (unsigned int i = 0; i < little_name_vec.size() - 1; ++i) 
+    {
+        littleNamesLength.push_back(std::max(6, static_cast<int>(little_name_vec[i].size())));
+        std::cout << "|";
+        std::cout << little_name_vec[i];
+        for (int j = 0; j < 6 - static_cast<int>(little_name_vec[i].size()); ++j)
+        {
+            std::cout << " ";
+        }
+    }
+    std::cout << "|" << little_name_vec[little_name_vec.size() - 1];
+    for (int j = 0; j < 6 - static_cast<int>(little_name_vec[little_name_vec.size() - 1].size()); ++j)
+    {
+        std::cout << " ";
+    }
+    std::cout << "|";
+    littleNamesLength.push_back(std::max(6, static_cast<int>(little_name_vec[little_name_vec.size() - 1].size())));
+    std::cout << "\n";
+    
+
+    std::string horz_line = "+";
+    for (unsigned int i = 0; i < max_length_name; ++i) {
+        horz_line += "-";
+    }
+    horz_line += "+";
+
+
+    for (unsigned int i = 0; i < littleNamesLength.size(); ++i)
+    {
+        for (unsigned int j = 0; j < littleNamesLength[i]; ++j)
+        {
+            horz_line += "-";
+        }
+        horz_line += "+";
     }
     horz_line += "\n";
 
     for (unsigned int i = 0; i < graph.size(); ++i)
     {
         std::cout << horz_line;
-        std::cout << big_name_vec[i] << " |"; // TODO: justify big names
+        std::cout << "|" << big_name_vec[i];
+        for (unsigned int j = 0; j < max_length_name - big_name_vec[i].size(); ++j)
+        {
+            std::cout << " ";
+        }
+        std::cout << "|"; // TODO: justify big names
         for (unsigned int j = 0; j < graph[i].size(); ++j)
         {
-            utils::printValCentered(graph[i][j], 5);
+            utils::printValCentered(graph[i][j], littleNamesLength[i]);
             std::cout << "|";
         }
         std::cout << "\n";
@@ -389,4 +437,18 @@ void Happy::printResults()
 
     std::cout << "\ntotal happiness: " << total_happiness << "\n";
 
+}
+
+size_t Happy::findLongestBrotherName() 
+{
+    size_t longest_name_size = big_name_vec[0].size();
+    for (size_t i = 1; i < big_name_vec.size(); ++i) 
+    {
+        size_t current_name_size = big_name_vec[i].size();
+        if (longest_name_size < big_name_vec[i].size()) 
+        {
+            longest_name_size = current_name_size;
+        }
+    }
+    return longest_name_size;
 }

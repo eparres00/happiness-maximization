@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cassert>
 #include "utils.h"
+#include <math.h>
 
 std::vector<std::string> utils::splitByDelimiter(const std::string str, char delimiter)
 {
@@ -38,9 +39,25 @@ std::vector<std::string> utils::splitByDelimiter(const std::string str, char del
 	return split_string;
 }
 
+double round(double val)
+{
+    return floor(val + 0.5);
+}
+
 void utils::printValCentered(double val, unsigned int total_spaces)
 {
+	// round val to nearest int
+	int roundedVal = round(val);
 
+	std::cout << roundedVal;
+	
+	std::string newString = std::to_string(roundedVal);
+
+    // want length of cell to be 7 so add spaces accordingly
+    int spacesToAdd = total_spaces - newString.length();
+    for(int i = 0; i < spacesToAdd; ++i) { std::cout << " "; }
+
+	/*
 	// num spaces used by value
 	// TODO: always <total_spaces> for some reason??? need to make the number of digits in number
 	unsigned int str_length = std::min((unsigned int) std::to_string(val).length(), total_spaces);
@@ -60,4 +77,5 @@ void utils::printValCentered(double val, unsigned int total_spaces)
 
 	// trail spaces
 	for(unsigned int i = 0; i < num_trail_spaces; ++i) { std::cout << " "; }
+	*/
 }
