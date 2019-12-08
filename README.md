@@ -40,7 +40,7 @@ Most importantly, all values in `csv` files must be separated by a space and com
 
 This problem can be well represented by a graph - specifically a bipartite graph (two distinct sets of nodes). These distinct sets represent brothers and pledges (note - there will never be connections within the same set). A node refers to a person in one of these sets, and an edge represents the compatibility between them. We first fill an adjacency matrix using the weights given. From here, we add all edges to a max-heap and repeatedly 'take' the maximum edge, ignoring edges to people who are already matched so that one big does not get multiple littles. This algorithm ensures the matching of any one-to-one pairs because that is the highest possible connection value.     
 
-![bipartite graph](/misc/bipartite_graph.jpg)
+![bipartite graph](/misc/bipartite_graph.png)
 
 ## Setup
 
